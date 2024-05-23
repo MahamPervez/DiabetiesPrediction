@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diabetes Prediction</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #007bff;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            margin-bottom: 10px;
+            color: #555;
+        }
+
+        input[type="number"] {
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        input[type="submit"] {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+
+        #predictionResult {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 18px;
+            color: #007bff;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Diabetes Prediction Form</h1>
+        <form action="/predict" method="post" id="predictionForm">
+            <label for="Pregnancies">Pregnancies:</label>
+            <input type="number" name="Pregnancies" id="Pregnancies">
+
+            <label for="Glucose">Glucose:</label>
+            <input type="number" name="Glucose" id="Glucose">
+
+            <label for="BloodPressure">Blood Pressure:</label>
+            <input type="number" name="BloodPressure" id="BloodPressure">
+
+            <label for="SkinThickness">Skin Thickness:</label>
+            <input type="number" name="SkinThickness" id="SkinThickness">
+
+            <label for="Insulin">Insulin:</label>
+            <input type="number" name="Insulin" id="Insulin">
+
+            <label for="BMI">BMI:</label>
+            <input type="number" step="0.01" name="BMI" id="BMI">
+
+            <label for="DiabetesPedigreeFunction">Diabetes Pedigree Function:</label>
+            <input type="number" step="0.001" name="DiabetesPedigreeFunction" id="DiabetesPedigreeFunction">
+
+            <label for="Age">Age:</label>
+            <input type="number" name="Age" id="Age">
+
+            <input type="submit" value="Predict">
+        </form>
+        <div id="predictionResult" style="display: none;"></div>
+    </div>
+
+    <script>
+        document.getElementById('predictionForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            var form = this;
+            var formData = new FormData(form);
+
+            fetch('/predict', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                var resultDiv = document.getElementById('predictionResult');
+                if (data.error) {
+                    resultDiv.style.color = 'red';
+                    resultDiv.textContent = 'An error occurred: ' + data.error;
+                } else {
+                    resultDiv.style.color = '#007bff';
+                    resultDiv.textContent = data.message;
+                }
+                resultDiv.style.display = 'block';
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        });
+    </script>
+</body>
+</html>
