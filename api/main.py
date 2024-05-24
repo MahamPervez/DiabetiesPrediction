@@ -1,9 +1,8 @@
+import os
+from flask import Flask, request, jsonify, render_template
+import urllib.request
 import json
 import logging
-from flask import Flask, request, jsonify, render_template
-import azure.functions as func
-import os
-import urllib.request
 
 app = Flask(__name__)
 
@@ -69,17 +68,6 @@ def predict():
         logging.error("Failed to reach the server. Reason: %s", error.reason)
         return jsonify({"error": str(error.reason)}), 500
 
-def main(req: func.HttpRequest) -> func.HttpResponse:
-    with app.test_request_context(
-        path=req.url,
-        base_url=req.url,
-        method=req.method,
-        data=req.get_body(),
-        headers=req.headers
-    ):
-        response = app.full_dispatch_request()
-        return func.HttpResponse(
-            response.get_data(),
-            status_code=response.status_code,
-            headers=response.headers
-        )
+if __name__ == '__main__':
+    app.run(debug=True)
+
