@@ -1,6 +1,5 @@
 Flask==2.0.1
 gunicorn==22.0.0
 urllib3==2.1.0
-json==4.2.2
 logging==4.8.1
 socket==1.0.0
